@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="button_height">220dp</dimen>
+    <dimen name="margin">1dp</dimen>
+    <dimen name="txt_size">22sp</dimen>
+    <dimen name="settings_margin_top">21dp</dimen>
+    <dimen name="settings_margin_start">16dp</dimen>
+</resources>
