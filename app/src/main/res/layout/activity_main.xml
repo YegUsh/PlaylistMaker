@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#3772E7"
+    android:background="@color/main_background"
     android:orientation="vertical"
     android:padding="16dp">
 
@@ -27,6 +27,7 @@
         android:layout_height="@dimen/button_height"
         android:layout_marginStart="@dimen/margin"
         android:layout_weight="1"
+        android:layout_marginTop="@dimen/main_button_margin_top"
         android:backgroundTint="@color/white"
         android:text="@string/search"
         android:textColor="@color/black_200"

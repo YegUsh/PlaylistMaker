@@ -52,11 +52,12 @@
 
         <Switch
             android:id="@+id/switch_compat"
+            android:paddingEnd="@dimen/switch_padding_end"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:checked="false"
-            android:layout_weight="1"
             android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:checked="false"
             tools:ignore="RtlSymmetry,UseSwitchCompatOrMaterialXml,VisualLintButtonSize" />
     </LinearLayout>
 
