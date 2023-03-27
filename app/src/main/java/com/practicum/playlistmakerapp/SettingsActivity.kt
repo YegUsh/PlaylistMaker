@@ -1,11 +1,9 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmakerapp
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import com.example.playlistmaker.MainActivity
-import com.practicum.playlistmakerapp.R
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -14,8 +12,7 @@ class SettingsActivity : AppCompatActivity() {
 
         val homeButton = findViewById<Button>(R.id.Home)
         homeButton.setOnClickListener {
-            val displayIntent = Intent(this, MainActivity::class.java)
-            startActivity(displayIntent)
+            finish()
         }
     }
 }
