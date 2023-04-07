@@ -2,11 +2,17 @@
 <resources>
     <dimen name="button_height">0dp</dimen>
     <dimen name="margin">1dp</dimen>
+    <dimen name="edittext_margin">12dp</dimen>
+    <dimen name="edittext_padding_start">14dp</dimen>
+    <dimen name="edittext_padding_end">30dp</dimen>
+    <dimen name="edittext_clear_padding_start">0dp</dimen>
     <dimen name="txt_size">22sp</dimen>
     <dimen name="settings_margin_top">21dp</dimen>
     <dimen name="settings_margin_start">16dp</dimen>
     <dimen name="switch_padding_end">7dp</dimen>
+    <dimen name="search_drawable_padding">7dp</dimen>
     <dimen name="main_button_margin_top">40dp</dimen>
     <dimen name="settings_margin_start_frame">16dp</dimen>
     <dimen name="settings_paddings_frame">21dp</dimen>
+    <dimen name="edittext_layout_height">36dp</dimen>
 </resources>

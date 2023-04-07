@@ -3,7 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Program Files/Android/projects/PlaylistMakerApp/app/src/main/res/drawable/ic_clear_search.xml" value="0.1115" />
         <entry key="..\:/Program Files/Android/projects/PlaylistMakerApp/app/src/main/res/drawable/ic_cursor.xml" value="0.124" />
+        <entry key="..\:/Program Files/Android/projects/PlaylistMakerApp/app/src/main/res/drawable/ic_search_edittext.xml" value="0.1115" />
         <entry key="..\:/Program Files/Android/projects/PlaylistMakerApp/app/src/main/res/drawable/search_edittext.xml" value="0.123" />
         <entry key="..\:/Program Files/Android/projects/PlaylistMakerApp/app/src/main/res/layout/activity_main.xml" value="0.22826086956521738" />
         <entry key="..\:/Program Files/Android/projects/PlaylistMakerApp/app/src/main/res/layout/activity_media.xml" value="0.11302083333333333" />

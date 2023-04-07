@@ -6,13 +6,14 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 
 class SearchActivity : AppCompatActivity() {
 
-    var tempEditTextString = ""
+    private var tempEditTextString = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,9 +59,6 @@ class SearchActivity : AppCompatActivity() {
         searchEditText.setText(tempEditTextString)
     }
 
-    companion object {
-        const val PRODUCT_AMOUNT = "PRODUCT_AMOUNT"
-    }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
         return if (s.isNullOrEmpty()) {
@@ -68,5 +66,10 @@ class SearchActivity : AppCompatActivity() {
         } else {
             View.VISIBLE
         }
+    }
+
+
+    companion object {
+        const val PRODUCT_AMOUNT = "PRODUCT_AMOUNT"
     }
 }

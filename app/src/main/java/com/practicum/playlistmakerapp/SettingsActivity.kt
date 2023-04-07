@@ -12,7 +12,7 @@ class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-        val homeButton = findViewById<Button>(R.id.Home)
+        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.settings_toolbar)
         val shareButton = findViewById<LinearLayout>(R.id.shareButton)
         val supportButton = findViewById<LinearLayout>(R.id.supportButton)
         val termsButton = findViewById<LinearLayout>(R.id.termsButton)
@@ -44,8 +44,6 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        homeButton.setOnClickListener {
-            finish()
-        }
+        toolbar.setNavigationOnClickListener { onBackPressed() }
     }
 }
