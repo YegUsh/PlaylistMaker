@@ -39,6 +39,7 @@
             android:focusable="true"
             android:hint="@string/search_hint"
             android:textColorHint="@color/hint_edittext_hint_color"
+            android:textColor="@color/edit_text_color"
             android:inputType="text"
             android:lines="1"
             android:maxLength="50"
@@ -52,6 +53,7 @@
 
         <ImageView
             android:id="@+id/search_cancel_btn"
+            android:src="@drawable/ic_clear_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/edittext_margin"

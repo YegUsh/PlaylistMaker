@@ -28,4 +28,5 @@
     <color name="rc_greater_text_color">#FFFFFF</color>
     <color name="yp_blue">#3772E7</color>
     <color name="main_text_color">#FFFFFFFF</color>
+    <color name="edit_text_color">#FF000000</color>
 </resources>
