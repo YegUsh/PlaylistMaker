@@ -80,7 +80,7 @@ class SearchActivity : AppCompatActivity() {
 
 
     companion object {
-        const val PRODUCT_AMOUNT = "PRODUCT_AMOUNT"
+        private const val PRODUCT_AMOUNT = "PRODUCT_AMOUNT"
         val tracksData: ArrayList<Track> = arrayListOf(
             Track(
                 "Smells Like Teen Spirit",

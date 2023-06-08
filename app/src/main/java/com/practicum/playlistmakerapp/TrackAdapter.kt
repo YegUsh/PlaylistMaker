@@ -22,9 +22,9 @@ class TrackAdapter(private val tracks: ArrayList<Track>) :
         fun bind(model: Track) {
             Glide.with(itemView.context)
                 .load(model.artworkUrl100)
-                .transform(RoundedCorners(2))
-                .placeholder(R.drawable.ic_no_reply)
                 .centerCrop()
+                .transform(RoundedCorners(10))
+                .placeholder(R.drawable.ic_no_reply)
                 .into(imageTitle)
             rvTrackName.text = model.trackName
             rvArtistName.text = model.artistName
