@@ -26,4 +26,5 @@
     <color name="rv_background">#1A1B22</color>
     <color name="rv_lesser_text_color">#FFFFFF</color>
     <color name="rv_greater_text_color">#FFFFFF</color>
+    <color name="search_day_night_color">#FFFFFF</color>
 </resources>

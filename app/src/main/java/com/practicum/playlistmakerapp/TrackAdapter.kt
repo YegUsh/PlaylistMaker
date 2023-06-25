@@ -7,8 +7,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.practicum.playlistmakerapp.net.TrackData
+import java.util.*
+import com.practicum.playlistmakerapp.net.*
+import kotlin.collections.ArrayList
+import java.text.SimpleDateFormat
 
-class TrackAdapter(private val tracks: ArrayList<Track>) :
+class TrackAdapter(private val tracks: ArrayList<TrackData>) :
     RecyclerView.Adapter<TrackAdapter.TrackViewHolder>() {
 
     class TrackViewHolder(item: ViewGroup) : RecyclerView.ViewHolder(
@@ -19,7 +24,7 @@ class TrackAdapter(private val tracks: ArrayList<Track>) :
         private val rvArtistName = itemView.findViewById<TextView>(R.id.rv_artist_name)
         private val rvTrackDuration = itemView.findViewById<TextView>(R.id.rv_track_duration)
 
-        fun bind(model: Track) {
+        fun bind(model: TrackData) {
             Glide.with(itemView.context)
                 .load(model.artworkUrl100)
                 .centerCrop()
@@ -28,7 +33,8 @@ class TrackAdapter(private val tracks: ArrayList<Track>) :
                 .into(imageTitle)
             rvTrackName.text = model.trackName
             rvArtistName.text = model.artistName
-            rvTrackDuration.text = model.trackTime
+            rvTrackDuration.text =
+                SimpleDateFormat("mm:ss", Locale.getDefault()).format(293000L).toString()
         }
     }
 
