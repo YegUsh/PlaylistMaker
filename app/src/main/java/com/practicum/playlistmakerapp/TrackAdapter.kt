@@ -13,8 +13,9 @@ import com.practicum.playlistmakerapp.net.*
 import kotlin.collections.ArrayList
 import java.text.SimpleDateFormat
 
-class TrackAdapter(private val tracks: ArrayList<TrackData>) :
+class TrackAdapter(val listener: HistoryListener) :
     RecyclerView.Adapter<TrackAdapter.TrackViewHolder>() {
+    var recentTracks: ArrayList<TrackData> = ArrayList<TrackData>()
 
     class TrackViewHolder(item: ViewGroup) : RecyclerView.ViewHolder(
         LayoutInflater.from(item.context).inflate(R.layout.track_items, item, false)
@@ -41,8 +42,18 @@ class TrackAdapter(private val tracks: ArrayList<TrackData>) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         TrackViewHolder(parent)
 
-    override fun getItemCount() = tracks.size
+    override fun getItemCount() = recentTracks.size
 
-    override fun onBindViewHolder(holder: TrackViewHolder, position: Int) =
-        holder.bind(tracks[position])
+    override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
+
+        holder.bind(recentTracks[position])
+        holder.itemView.setOnClickListener {
+            listener.onClick(recentTracks[position])
+        }
+    }
+
+    fun interface HistoryListener {
+        fun onClick(trackData: TrackData)
+    }
+
 }

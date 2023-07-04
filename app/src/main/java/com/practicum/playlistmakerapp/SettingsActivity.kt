@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import com.google.android.material.switchmaterial.SwitchMaterial
+import android.content.SharedPreferences
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,6 +18,20 @@ class SettingsActivity : AppCompatActivity() {
         val shareButton = findViewById<LinearLayout>(R.id.shareButton)
         val supportButton = findViewById<LinearLayout>(R.id.supportButton)
         val termsButton = findViewById<LinearLayout>(R.id.termsButton)
+        val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
+
+        themeSwitcher.isChecked =
+            getSharedPreferences(PRACTICUM_EXAMPLE_PREFERENCES, MODE_PRIVATE).getBoolean(
+                THEME_KEY,
+                false
+            )
+
+
+        themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
+            (applicationContext as App).switchTheme(checked)
+            getSharedPreferences(PRACTICUM_EXAMPLE_PREFERENCES, MODE_PRIVATE).edit()
+                .putBoolean(THEME_KEY, checked).apply()
+        }
 
 
         shareButton.setOnClickListener {
@@ -45,5 +61,6 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         toolbar.setNavigationOnClickListener { onBackPressed() }
+
     }
 }

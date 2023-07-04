@@ -30,19 +30,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            style="@style/SettingsScreenTextStyle"
-            android:text="@string/black_theme" />
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:textSize="16sp"
+            android:id="@+id/themeSwitcher"
+            android:text="@string/black_theme"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="2dp"
+            android:layout_gravity="start"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
 
-        <Switch
-            android:id="@+id/switch_compat"
-            android:paddingEnd="@dimen/switch_padding_end"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:checked="false"
-            tools:ignore="RtlSymmetry,UseSwitchCompatOrMaterialXml,VisualLintButtonSize" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -93,5 +92,7 @@
             style="@style/SettingsScreenButtonStyle"
             app:icon="@drawable/ic_terms"/>
     </LinearLayout>
+
+
 
 </LinearLayout>
