@@ -2,6 +2,7 @@ package com.practicum.playlistmakerapp
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -12,6 +13,7 @@ import java.util.*
 import com.practicum.playlistmakerapp.net.*
 import kotlin.collections.ArrayList
 import java.text.SimpleDateFormat
+const val SEARCH_KEY = "search_key"
 
 class TrackAdapter(val listener: HistoryListener) :
     RecyclerView.Adapter<TrackAdapter.TrackViewHolder>() {
@@ -24,6 +26,7 @@ class TrackAdapter(val listener: HistoryListener) :
         private val rvTrackName = itemView.findViewById<TextView>(R.id.rv_track_name)
         private val rvArtistName = itemView.findViewById<TextView>(R.id.rv_artist_name)
         private val rvTrackDuration = itemView.findViewById<TextView>(R.id.rv_track_duration)
+        private val rvDetails = itemView.findViewById<ImageButton>(R.id.rv_image_btn)
 
         fun bind(model: TrackData) {
             Glide.with(itemView.context)
@@ -36,6 +39,9 @@ class TrackAdapter(val listener: HistoryListener) :
             rvArtistName.text = model.artistName
             rvTrackDuration.text =
                 SimpleDateFormat("mm:ss", Locale.getDefault()).format(293000L).toString()
+            rvDetails.setOnClickListener {
+
+            }
         }
     }
 

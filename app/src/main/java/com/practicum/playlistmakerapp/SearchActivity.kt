@@ -1,6 +1,7 @@
 package com.practicum.playlistmakerapp
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -92,12 +93,13 @@ class SearchActivity : AppCompatActivity() {
 
         val trackApapter = TrackAdapter {
             addToRecentHistoryList(it)
+            transitionToMediaPlayerActivity(it)
         }
         trackApapter.recentTracks = tracks
         searchTracksRecyclerView.adapter = trackApapter
         searchTracksRecyclerView.layoutManager = LinearLayoutManager(this)
         val historyTrackAdapter = TrackAdapter {
-            Toast.makeText(this, "clicked", Toast.LENGTH_LONG).show()
+            transitionToMediaPlayerActivity(it)
         }
         historyTrackAdapter.recentTracks = recentHistoryTracks
         searchHistoryTracksRecyclerView.adapter = historyTrackAdapter
@@ -109,6 +111,14 @@ class SearchActivity : AppCompatActivity() {
             recentHistoryTracks.clear()
             searchHistoryTracksRecyclerView.adapter?.notifyDataSetChanged()
         }
+    }
+
+    private fun transitionToMediaPlayerActivity(track: TrackData) {
+        val sendIntent: Intent = Intent(applicationContext, MediaPlayerActivity::class.java)
+        sendIntent.putExtra(
+            SEARCH_KEY, track
+        )
+        startActivity(sendIntent)
     }
 
     private fun addToRecentHistoryList(trackData: TrackData) {
