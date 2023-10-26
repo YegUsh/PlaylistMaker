@@ -1,8 +1,11 @@
 package com.practicum.playlistmakerapp
 
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -11,6 +14,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.res.TypedArrayUtils.getText
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Retrofit
@@ -25,6 +29,10 @@ import retrofit2.Response
 class SearchActivity : AppCompatActivity() {
 
     private var tempEditTextString = ""
+    private val searchRunnable = Runnable { search() }
+    private val handler = Handler(Looper.getMainLooper())
+    private var isClickAllowed = true
+    private lateinit var progressBar: ProgressBar
     private lateinit var searchEditText: EditText
     private lateinit var searchTracksRecyclerView: RecyclerView
     private lateinit var searchNothingToFindLayout: ConstraintLayout
@@ -67,6 +75,7 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                searchDebounce()
                 searchClearBtn.visibility = clearButtonVisibility(p0)
                 tempEditTextString = p0.toString()
                 searchTracksRecyclerView.visibility = View.GONE
@@ -99,7 +108,9 @@ class SearchActivity : AppCompatActivity() {
         searchTracksRecyclerView.adapter = trackApapter
         searchTracksRecyclerView.layoutManager = LinearLayoutManager(this)
         val historyTrackAdapter = TrackAdapter {
-            transitionToMediaPlayerActivity(it)
+            if (clickDebounce()) {
+                transitionToMediaPlayerActivity(it)
+            }
         }
         historyTrackAdapter.recentTracks = recentHistoryTracks
         searchHistoryTracksRecyclerView.adapter = historyTrackAdapter
@@ -114,12 +125,12 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun transitionToMediaPlayerActivity(track: TrackData) {
-        val sendIntent: Intent = Intent(applicationContext, MediaPlayerActivity::class.java)
-        sendIntent.putExtra(
-            SEARCH_KEY, track
-        )
-        startActivity(sendIntent)
-    }
+            val sendIntent: Intent = Intent(applicationContext, MediaPlayerActivity::class.java)
+            sendIntent.putExtra(
+                SEARCH_KEY, track
+            )
+            startActivity(sendIntent)
+        }
 
     private fun addToRecentHistoryList(trackData: TrackData) {
         for (index in recentHistoryTracks.indices) {
@@ -156,6 +167,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun search() {
+        progressBar.visibility = View.VISIBLE
         songService.search(searchEditText.text.toString())
             .enqueue(object : Callback<TrackResponse> {
                 override fun onResponse(
@@ -196,6 +208,7 @@ class SearchActivity : AppCompatActivity() {
                 searchTracksRecyclerView.visibility = View.VISIBLE
                 searchNothingToFindLayout.visibility = View.GONE
                 searchNothingFoundBtn.visibility = View.GONE
+                progressBar.visibility = View.GONE
 
             }
             SearchUIType.NO_INTERNET -> {
@@ -207,6 +220,7 @@ class SearchActivity : AppCompatActivity() {
                 searchNothingFoundText.text = getText(R.string.search_no_internet_text)
                 searchNothingFoundBtn.visibility = View.VISIBLE
                 searchNothingFoundBtn.setOnClickListener { search() }
+                progressBar.visibility = View.GONE
             }
             SearchUIType.NO_DATA -> {
                 recentHistoryLayout.visibility = View.GONE
@@ -216,6 +230,7 @@ class SearchActivity : AppCompatActivity() {
                 searchNothingFoundImage.setImageResource(R.drawable.ic_nothing_found)
                 searchNothingFoundText.text =
                     getText(R.string.search_nothing_find_text)
+                progressBar.visibility = View.GONE
             }
         }
     }
@@ -241,7 +256,22 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    private fun clickDebounce() : Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
+    }
+
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+    }
+
     private fun initializeUI() {
+        progressBar = findViewById(R.id.progressBar)
         toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.search_toolbar)
         searchEditText = findViewById(R.id.search_search)
         searchNothingToFindLayout = findViewById(R.id.search_nothing_found_layout)
@@ -271,5 +301,7 @@ class SearchActivity : AppCompatActivity() {
     companion object {
         private const val PRODUCT_AMOUNT = "PRODUCT_AMOUNT"
         private const val baseUrl = "https://itunes.apple.com"
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 }

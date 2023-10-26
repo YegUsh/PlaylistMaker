@@ -1,7 +1,11 @@
 package com.practicum.playlistmakerapp
 
+import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -10,6 +14,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmakerapp.net.TrackData
 import java.text.SimpleDateFormat
+import java.util.Locale
 import java.util.*
 
 class MediaPlayerActivity : AppCompatActivity() {
@@ -23,6 +28,12 @@ class MediaPlayerActivity : AppCompatActivity() {
     private lateinit var mpTrackAlbum: TextView
     private lateinit var mpTrackAlbumText: TextView
     private lateinit var mpReleaseDate: TextView
+    private lateinit var url: String
+    private lateinit var mpButton: ImageButton
+    private lateinit var mpCurrentTrackDuration: TextView
+    private var mediaPlayer = MediaPlayer()
+    private val handler = Handler(Looper.getMainLooper())
+    private var playerState = STATE_DEFAULT
 
     private lateinit var track: TrackData
 
@@ -31,9 +42,20 @@ class MediaPlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_media_player)
         initializeUI()
-        initializeListeners()
         getData()
+        initializeListeners()
+        preparePlayer()
+    }
 
+    override fun onPause() {
+        super.onPause()
+        pausePlayer()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacksAndMessages(null)
+        mediaPlayer.release()
     }
 
     private fun initializeUI() {
@@ -49,11 +71,17 @@ class MediaPlayerActivity : AppCompatActivity() {
         mpReleaseDate = findViewById(R.id.track_release_date_value)
         mpTrackAlbum.visibility = View.VISIBLE
         mpTrackAlbumText.visibility = View.VISIBLE
+        mpButton = findViewById(R.id.mp_play_btn)
+        mpButton.isEnabled = false
+        mpCurrentTrackDuration = findViewById(R.id.mp_current_track_duration)
     }
 
     private fun initializeListeners() {
         mpBackBtn.setOnClickListener {
             onBackPressed()
+        }
+        mpButton.setOnClickListener {
+            playbackControl()
         }
     }
 
@@ -67,21 +95,85 @@ class MediaPlayerActivity : AppCompatActivity() {
             .placeholder(R.drawable.ic_no_reply)
             .centerInside()
             .transform(RoundedCorners(cornerRadius))
-
             .into(mpCover)
         mpTrackName.text = track.trackName
         mpArtistName.text = track.artistName
         mpTrackDuration.text =
-            SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
-                .toString()
+            SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis).toString()
         mpTrackCountry.text = track.country
         mpTrackAlbum.text = if (track.collectionName.isNullOrEmpty()) {
             mpTrackAlbum.visibility = View.GONE
             mpTrackAlbumText.visibility = View.GONE
             ""
-        } else track.collectionName
+        }
+        else track.collectionName
+
+        url = track.previewUrl
 
         mpTrackGenre.text = track.primaryGenreName
         mpReleaseDate.text = track.releaseDate?.substring(0, 4)
+        mpCurrentTrackDuration.text =
+            SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition)
+        mpReleaseDate.text = track.releaseDate?.substring(0, 4)
     }
+
+    private fun setDuration(milliseconds: Int) {
+        mpCurrentTrackDuration.text =
+            SimpleDateFormat("mm:ss", Locale.getDefault()).format(milliseconds)
+    }
+
+    private fun preparePlayer() {
+        mediaPlayer.setDataSource(url)
+        mediaPlayer.prepareAsync()
+        mediaPlayer.setOnPreparedListener {
+            mpButton.isEnabled = true
+            playerState = STATE_PREPARED
+            mpButton.setImageResource(R.drawable.ic_mp_play)
+        }
+        mediaPlayer.setOnCompletionListener {
+            mpButton.setImageResource(R.drawable.ic_mp_play)
+            playerState = STATE_PREPARED
+            setDuration(0)
+            handler.removeCallbacksAndMessages(null)
+        }
+    }
+
+    private fun startPlayer() {
+        mediaPlayer.start()
+        mpButton.setImageResource(R.drawable.ic_pause)
+        playerState = STATE_PLAYING
+        handler.postDelayed(object : Runnable {
+            override fun run() {
+                setDuration(mediaPlayer.currentPosition)
+                handler.postDelayed(this, MP_DELAY)
+            }
+        }, MP_DELAY)
+    }
+
+    private fun pausePlayer() {
+        mediaPlayer.pause()
+        mpButton.setImageResource(R.drawable.ic_mp_play)
+        playerState = STATE_PAUSED
+        handler.removeCallbacksAndMessages(null)
+    }
+
+    private fun playbackControl() {
+        when(playerState) {
+            STATE_PLAYING -> {
+                pausePlayer()
+            }
+            STATE_PREPARED, STATE_PAUSED -> {
+                startPlayer()
+            }
+        }
+    }
+
+    companion object {
+        private const val STATE_DEFAULT = 0
+        private const val STATE_PREPARED = 1
+        private const val STATE_PLAYING = 2
+        private const val STATE_PAUSED = 3
+        private const val MP_DELAY = 1000L
+    }
+
 }
