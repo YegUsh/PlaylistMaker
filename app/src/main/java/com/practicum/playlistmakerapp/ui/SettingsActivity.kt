@@ -1,14 +1,15 @@
-package com.practicum.playlistmakerapp
+package com.practicum.playlistmakerapp.ui
 
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.FrameLayout
 import android.widget.LinearLayout
 import com.google.android.material.switchmaterial.SwitchMaterial
-import android.content.SharedPreferences
+import com.practicum.playlistmakerapp.App
+import com.practicum.playlistmakerapp.PRACTICUM_EXAMPLE_PREFERENCES
+import com.practicum.playlistmakerapp.R
+import com.practicum.playlistmakerapp.THEME_KEY
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

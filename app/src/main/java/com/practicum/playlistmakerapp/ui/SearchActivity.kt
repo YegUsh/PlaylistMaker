@@ -1,7 +1,6 @@
-package com.practicum.playlistmakerapp
+package com.practicum.playlistmakerapp.ui
 
 import android.content.Context
-import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -14,13 +13,13 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.res.TypedArrayUtils.getText
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.practicum.playlistmakerapp.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import com.practicum.playlistmakerapp.net.TrackApi
-import com.practicum.playlistmakerapp.net.TrackData
+import com.practicum.playlistmakerapp.domain.models.TrackData
 import com.practicum.playlistmakerapp.net.TrackResponse
 import retrofit2.Call
 import retrofit2.Callback
@@ -142,7 +141,7 @@ class SearchActivity : AppCompatActivity() {
             }
         }
 
-        if (recentHistoryTracks.size < 10) {
+        if (recentHistoryTracks.size < HISTORY_TRACK_SIZE) {
             recentHistoryTracks.add(0, trackData)
             searchHistoryTracksRecyclerView.adapter?.notifyItemInserted(0)
             searchHistoryTracksRecyclerView.adapter?.notifyItemRangeChanged(
@@ -303,5 +302,6 @@ class SearchActivity : AppCompatActivity() {
         private const val baseUrl = "https://itunes.apple.com"
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val HISTORY_TRACK_SIZE = 10
     }
 }

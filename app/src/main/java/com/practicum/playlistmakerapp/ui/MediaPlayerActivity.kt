@@ -1,23 +1,22 @@
-package com.practicum.playlistmakerapp
+package com.practicum.playlistmakerapp.ui
 
-import android.media.MediaPlayer
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.practicum.playlistmakerapp.net.TrackData
+import com.practicum.playlistmakerapp.R
+import com.practicum.playlistmakerapp.creator.Creator
+import com.practicum.playlistmakerapp.domain.models.TrackData
+import com.practicum.playlistmakerapp.presentation.MediaPlayerPresenterImpl
+import com.practicum.playlistmakerapp.presentation.MediaPlayerView
 import java.text.SimpleDateFormat
 import java.util.Locale
-import java.util.*
 
-class MediaPlayerActivity : AppCompatActivity() {
+class MediaPlayerActivity : AppCompatActivity(), MediaPlayerView {
     private lateinit var mpBackBtn: ImageButton
     private lateinit var mpCover: ImageView
     private lateinit var mpTrackName: TextView
@@ -28,34 +27,28 @@ class MediaPlayerActivity : AppCompatActivity() {
     private lateinit var mpTrackAlbum: TextView
     private lateinit var mpTrackAlbumText: TextView
     private lateinit var mpReleaseDate: TextView
-    private lateinit var url: String
     private lateinit var mpButton: ImageButton
+    private lateinit var mpLiked: ImageButton
     private lateinit var mpCurrentTrackDuration: TextView
-    private var mediaPlayer = MediaPlayer()
-    private val handler = Handler(Looper.getMainLooper())
-    private var playerState = STATE_DEFAULT
-
-    private lateinit var track: TrackData
+    lateinit var presenter: MediaPlayerPresenterImpl
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_media_player)
         initializeUI()
-        getData()
+        presenter = Creator.providePresenter(mediaPlayerView = this, activity = this)
         initializeListeners()
-        preparePlayer()
     }
 
     override fun onPause() {
         super.onPause()
-        pausePlayer()
+        presenter.onViewPaused()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        handler.removeCallbacksAndMessages(null)
-        mediaPlayer.release()
+        presenter.onViewDestroyed()
     }
 
     private fun initializeUI() {
@@ -72,24 +65,23 @@ class MediaPlayerActivity : AppCompatActivity() {
         mpTrackAlbum.visibility = View.VISIBLE
         mpTrackAlbumText.visibility = View.VISIBLE
         mpButton = findViewById(R.id.mp_play_btn)
-        mpButton.isEnabled = false
+        mpLiked = findViewById(R.id.mp_fav_btn)
         mpCurrentTrackDuration = findViewById(R.id.mp_current_track_duration)
     }
 
     private fun initializeListeners() {
         mpBackBtn.setOnClickListener {
-            onBackPressed()
+            presenter.onBackPressed()
         }
         mpButton.setOnClickListener {
-            playbackControl()
+            presenter.onPlayBtnClicked()
         }
     }
 
-    private fun getData() {
+    override fun getData(track: TrackData) {
 
         val cornerRadius =
             applicationContext.resources.getDimensionPixelSize(R.dimen.main_btn_radius)
-        track = intent.getParcelableExtra<TrackData>(SEARCH_KEY) ?: return
         Glide.with(this)
             .load(track?.artworkUrl100?.replaceAfterLast('/', "512x512bb.jpg"))
             .placeholder(R.drawable.ic_no_reply)
@@ -108,72 +100,27 @@ class MediaPlayerActivity : AppCompatActivity() {
         }
         else track.collectionName
 
-        url = track.previewUrl
-
         mpTrackGenre.text = track.primaryGenreName
-        mpReleaseDate.text = track.releaseDate?.substring(0, 4)
-        mpCurrentTrackDuration.text =
-            SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition)
+        mpCurrentTrackDuration.text = "00:00"
         mpReleaseDate.text = track.releaseDate?.substring(0, 4)
     }
 
-    private fun setDuration(milliseconds: Int) {
-        mpCurrentTrackDuration.text =
-            SimpleDateFormat("mm:ss", Locale.getDefault()).format(milliseconds)
+    override fun setDuration(duration: String) {
+        mpCurrentTrackDuration.text = duration
     }
 
-    private fun preparePlayer() {
-        mediaPlayer.setDataSource(url)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            mpButton.isEnabled = true
-            playerState = STATE_PREPARED
-            mpButton.setImageResource(R.drawable.ic_mp_play)
-        }
-        mediaPlayer.setOnCompletionListener {
-            mpButton.setImageResource(R.drawable.ic_mp_play)
-            playerState = STATE_PREPARED
-            setDuration(0)
-            handler.removeCallbacksAndMessages(null)
-        }
-    }
-
-    private fun startPlayer() {
-        mediaPlayer.start()
-        mpButton.setImageResource(R.drawable.ic_pause)
-        playerState = STATE_PLAYING
-        handler.postDelayed(object : Runnable {
-            override fun run() {
-                setDuration(mediaPlayer.currentPosition)
-                handler.postDelayed(this, MP_DELAY)
-            }
-        }, MP_DELAY)
-    }
-
-    private fun pausePlayer() {
-        mediaPlayer.pause()
+    override fun setStartImage() {
         mpButton.setImageResource(R.drawable.ic_mp_play)
-        playerState = STATE_PAUSED
-        handler.removeCallbacksAndMessages(null)
+        mpLiked.setImageResource(R.drawable.ic_mp_liked)
     }
 
-    private fun playbackControl() {
-        when(playerState) {
-            STATE_PLAYING -> {
-                pausePlayer()
-            }
-            STATE_PREPARED, STATE_PAUSED -> {
-                startPlayer()
-            }
-        }
+    override fun setPausedImage() {
+        mpButton.setImageResource(R.drawable.ic_pause)
+        mpLiked.setImageResource(R.drawable.ic_liked_play)
     }
 
-    companion object {
-        private const val STATE_DEFAULT = 0
-        private const val STATE_PREPARED = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSED = 3
-        private const val MP_DELAY = 1000L
+    override fun goBack() {
+        finish()
     }
 
 }

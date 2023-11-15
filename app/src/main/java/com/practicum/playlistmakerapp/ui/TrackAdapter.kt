@@ -1,4 +1,4 @@
-package com.practicum.playlistmakerapp
+package com.practicum.playlistmakerapp.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,9 +8,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.practicum.playlistmakerapp.net.TrackData
+import com.practicum.playlistmakerapp.R
+import com.practicum.playlistmakerapp.domain.models.TrackData
 import java.util.*
-import com.practicum.playlistmakerapp.net.*
 import kotlin.collections.ArrayList
 import java.text.SimpleDateFormat
 const val SEARCH_KEY = "search_key"

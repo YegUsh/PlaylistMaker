@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MediaActivity">
+    tools:context=".ui.MediaActivity">
 
 
     <androidx.constraintlayout.widget.Guideline
@@ -54,21 +54,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.615" />
+        app:layout_constraintGuide_percent="0.645" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/bottom_guideline_lesser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.73" />
+        app:layout_constraintGuide_percent="0.76" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/bottom_guideline_for_texts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.784" />
+        app:layout_constraintGuide_percent="0.790" />
 
     <ImageButton
         android:id="@+id/music_back_btn"

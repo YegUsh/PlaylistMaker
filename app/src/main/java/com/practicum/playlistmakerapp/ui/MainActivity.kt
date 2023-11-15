@@ -1,9 +1,10 @@
-package com.practicum.playlistmakerapp
+package com.practicum.playlistmakerapp.ui
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import com.practicum.playlistmakerapp.R
 
 
 class MainActivity : AppCompatActivity() {
