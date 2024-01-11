@@ -3,7 +3,7 @@ package com.practicum.playlistmakerapp.domain.repository
 import com.practicum.playlistmakerapp.domain.models.PlayerState
 
 interface MediaPlayerRepository{
-    fun preparePlayer()
+    fun preparePlayer(trackUrl: String)
     fun startPlayer()
     fun pausedPlayer()
     fun stopPlayer()

@@ -6,17 +6,21 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmakerapp.R
-import com.practicum.playlistmakerapp.creator.Creator
 import com.practicum.playlistmakerapp.domain.models.TrackData
-import com.practicum.playlistmakerapp.presentation.MediaPlayerPresenterImpl
-import com.practicum.playlistmakerapp.presentation.MediaPlayerView
+import com.practicum.playlistmakerapp.presentation.MediaPlayerViewModel
+import com.practicum.playlistmakerapp.presentation.Router
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class MediaPlayerActivity : AppCompatActivity(), MediaPlayerView {
+class MediaPlayerActivity : AppCompatActivity() {
+    val router = Router(this)
+    private val viewModel by lazy {
+        ViewModelProvider(this, MediaPlayerViewModel.getViewModelFactory())[MediaPlayerViewModel::class.java]
+    }
     private lateinit var mpBackBtn: ImageButton
     private lateinit var mpCover: ImageView
     private lateinit var mpTrackName: TextView
@@ -30,25 +34,30 @@ class MediaPlayerActivity : AppCompatActivity(), MediaPlayerView {
     private lateinit var mpButton: ImageButton
     private lateinit var mpLiked: ImageButton
     private lateinit var mpCurrentTrackDuration: TextView
-    lateinit var presenter: MediaPlayerPresenterImpl
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_media_player)
         initializeUI()
-        presenter = Creator.providePresenter(mediaPlayerView = this, activity = this)
+        val track = intent.getSerializableExtra(SEARCH_KEY)!! as TrackData
+        viewModel.preparePlayer(track.previewUrl)
+        getData(track)
+        viewModel.getPlayStatusLiveData().observe(this) {
+            when (it) {
+                PlayStatus.OnPause -> mpButton.setImageResource(R.drawable.ic_mp_play)
+                PlayStatus.OnStart -> mpButton.setImageResource(R.drawable.ic_pause)
+            }
+        }
+        viewModel.getDurationLiveData().observe(this) {
+            setDuration(it)
+        }
         initializeListeners()
     }
 
     override fun onPause() {
         super.onPause()
-        presenter.onViewPaused()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        presenter.onViewDestroyed()
+        viewModel.onViewPaused()
     }
 
     private fun initializeUI() {
@@ -71,14 +80,14 @@ class MediaPlayerActivity : AppCompatActivity(), MediaPlayerView {
 
     private fun initializeListeners() {
         mpBackBtn.setOnClickListener {
-            presenter.onBackPressed()
+            finish()
         }
         mpButton.setOnClickListener {
-            presenter.onPlayBtnClicked()
+            viewModel.onPlayBtnClicked()
         }
     }
 
-    override fun getData(track: TrackData) {
+    fun getData(track: TrackData) {
 
         val cornerRadius =
             applicationContext.resources.getDimensionPixelSize(R.dimen.main_btn_radius)
@@ -105,22 +114,23 @@ class MediaPlayerActivity : AppCompatActivity(), MediaPlayerView {
         mpReleaseDate.text = track.releaseDate?.substring(0, 4)
     }
 
-    override fun setDuration(duration: String) {
+    private fun setDuration(duration: String) {
         mpCurrentTrackDuration.text = duration
     }
 
-    override fun setStartImage() {
+    fun setStartImage() {
         mpButton.setImageResource(R.drawable.ic_mp_play)
         mpLiked.setImageResource(R.drawable.ic_mp_liked)
     }
 
-    override fun setPausedImage() {
+    fun setPausedImage() {
         mpButton.setImageResource(R.drawable.ic_pause)
         mpLiked.setImageResource(R.drawable.ic_liked_play)
     }
 
-    override fun goBack() {
+    fun goBack() {
         finish()
     }
 
 }
+
