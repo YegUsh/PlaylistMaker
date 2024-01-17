@@ -1,3 +1,30 @@
 <resources>
-    <string name="app_name">PlaylistMakerApp</string>
+    <string name="app_name">Playlist Maker</string>
+    <string name="playlist_maker">PlayList Maker</string>
+    <string name="search">Поиск</string>
+    <string name="media">Медиатека</string>
+    <string name="settings">Настройки</string>
+    <string name="back">Назад</string>
+    <string name="black_theme">Темная тема</string>
+    <string name="share_app">Поделиться приложением</string>
+    <string name="message_to_support">Написать в поддержку</string>
+    <string name="terms_of_agreement">Пользовательское соглашение</string>
+    <string name="support_yandex_practicum_offer">https://yandex.ru/legal/practicum_offer/</string>
+    <string name="yandex_practicum_android_dev_url">https://practicum.yandex.ru/android-developer/</string>
+    <string name="contact_email">ush.yegor@yandex.kz</string>
+    <string name="support_email_subject">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
+    <string name="support_email_text_body">Спасибо разработчикам и разработчицам за крутое приложение!</string>
+    <string name="search_hint">Поиск</string>
+    <string name="search_text_refresh">Обновить</string>
+    <string name="search_nothing_find_text">Ничего не нашлось</string>
+    <string name="search_no_internet_text">Проблемы со связью\n\n
+        Загрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="search_searched_textview">Вы искали</string>
+    <string name="search_text_clear">Очистить историю</string>
+    <string name="track_duration">Длительность</string>
+    <string name="track_alb">Альбом</string>
+    <string name="track_gen">Жанр</string>
+    <string name="track_release">Год</string>
+    <string name="track_country">Страна</string>
+    <string name="temp_track_duration">0:30</string>
 </resources>

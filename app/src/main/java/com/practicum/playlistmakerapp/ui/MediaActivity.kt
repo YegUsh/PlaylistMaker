@@ -1,11 +1,12 @@
-package com.practicum.playlistmakerapp
+package com.practicum.playlistmakerapp.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.practicum.playlistmakerapp.R
 
-class MainActivity : AppCompatActivity() {
+class MediaActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_media)
     }
 }
