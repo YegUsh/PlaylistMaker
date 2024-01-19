@@ -3,9 +3,18 @@ package com.practicum.playlistmakerapp.app
 import android.app.Application
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
+import com.practicum.playlistmakerapp.di.dataModule
+import com.practicum.playlistmakerapp.di.interactorModule
+import com.practicum.playlistmakerapp.di.repositoryModule
+import com.practicum.playlistmakerapp.di.viewModelModule
+import com.practicum.playlistmakerapp.settings.domain.api.SettingsRepository
+import com.practicum.playlistmakerapp.util.THEME_KEY
+import org.koin.android.ext.android.getKoin
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.GlobalContext.startKoin
+import org.koin.core.logger.Level
 
-const val PRACTICUM_EXAMPLE_PREFERENCES = "practicum_example_preferences"
-const val THEME_KEY = "theme_key"
 
 class App : Application() {
     var darkTheme = false
@@ -14,10 +23,12 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        instance = this
-        sharedPreferences = getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE)
-        val settingsTheme = getSharedPreferences(PRACTICUM_EXAMPLE_PREFERENCES, MODE_PRIVATE)
-        switchTheme(settingsTheme.getBoolean(THEME_KEY, false))
+        startKoin {
+            androidLogger(Level.DEBUG)
+            androidContext(this@App)
+            modules(dataModule, repositoryModule, interactorModule, viewModelModule)
+        }
+        switchTheme(getKoin().get<SettingsRepository>().getTheme(THEME_KEY))
     }
 
     fun switchTheme(darkThemeEnabled: Boolean) {
@@ -32,10 +43,5 @@ class App : Application() {
         )
     }
 
-    companion object {
-        private const val APP_PREFERENCES = "app_preferences"
-        lateinit var instance: App
-            private set
-    }
 
 }

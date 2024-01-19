@@ -8,16 +8,12 @@ import com.google.android.material.switchmaterial.SwitchMaterial
 import com.practicum.playlistmakerapp.R
 import com.practicum.playlistmakerapp.settings.view_model.SettingsViewModel
 import com.practicum.playlistmakerapp.util.router.SettingRouter
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class SettingsActivity : AppCompatActivity() {
 
-    val viewModel by lazy {
-        ViewModelProvider(
-            this,
-            SettingsViewModel.getViewModelFactory()
-        )[SettingsViewModel::class.java]
-    }
+    val viewModel by viewModel<SettingsViewModel>()
     val settingRouter by lazy {
         SettingRouter(this)
     }

@@ -2,7 +2,6 @@ package com.practicum.playlistmakerapp.search.ui.model
 
 import com.practicum.playlistmakerapp.mediaplayer.domain.models.TrackData
 import com.practicum.playlistmakerapp.search.domain.model.SearchUIType
-import com.practicum.playlistmakerapp.search.ui.SearchActivity
 
 sealed interface UiState {
 

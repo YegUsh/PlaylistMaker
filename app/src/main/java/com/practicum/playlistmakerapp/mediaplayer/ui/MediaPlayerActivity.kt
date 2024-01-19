@@ -6,23 +6,19 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmakerapp.R
 import com.practicum.playlistmakerapp.mediaplayer.domain.models.TrackData
-import com.practicum.playlistmakerapp.mediaplayer.presentation.MediaPlayerViewModel
-import com.practicum.playlistmakerapp.mediaplayer.presentation.Router
+import com.practicum.playlistmakerapp.mediaplayer.ui.view_model.MediaPlayerViewModel
 import com.practicum.playlistmakerapp.main.PlayStatus
 import com.practicum.playlistmakerapp.search.ui.SEARCH_KEY
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class MediaPlayerActivity : AppCompatActivity() {
-    val router = Router(this)
-    private val viewModel by lazy {
-        ViewModelProvider(this, MediaPlayerViewModel.getViewModelFactory())[MediaPlayerViewModel::class.java]
-    }
+    private val viewModel by viewModel<MediaPlayerViewModel>()
     private lateinit var mpBackBtn: ImageButton
     private lateinit var mpCover: ImageView
     private lateinit var mpTrackName: TextView
@@ -55,7 +51,7 @@ class MediaPlayerActivity : AppCompatActivity() {
         viewModel.getDurationLiveData().observe(this) {
             setDuration(it)
         }
-        initializeListeners()
+        initializeListeners(track.previewUrl)
     }
 
     override fun onPause() {
@@ -81,59 +77,46 @@ class MediaPlayerActivity : AppCompatActivity() {
         mpCurrentTrackDuration = findViewById(R.id.mp_current_track_duration)
     }
 
-    private fun initializeListeners() {
+    private fun initializeListeners(trackUrl: String) {
         mpBackBtn.setOnClickListener {
             finish()
         }
         mpButton.setOnClickListener {
-            viewModel.onPlayBtnClicked()
+            viewModel.onPlayBtnClicked(trackUrl)
         }
     }
 
-    fun getData(track: TrackData) {
+    fun getData(trackData: TrackData) {
 
         val cornerRadius =
             applicationContext.resources.getDimensionPixelSize(R.dimen.main_btn_radius)
         Glide.with(this)
-            .load(track?.artworkUrl100?.replaceAfterLast('/', "512x512bb.jpg"))
+            .load(trackData.artworkUrl100?.replaceAfterLast('/', "512x512bb.jpg"))
             .placeholder(R.drawable.ic_no_reply)
             .centerInside()
             .transform(RoundedCorners(cornerRadius))
             .into(mpCover)
-        mpTrackName.text = track.trackName
-        mpArtistName.text = track.artistName
+        mpTrackName.text = trackData.trackName
+        mpArtistName.text = trackData.artistName
         mpTrackDuration.text =
-            SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis).toString()
-        mpTrackCountry.text = track.country
-        mpTrackAlbum.text = if (track.collectionName.isNullOrEmpty()) {
+            SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackData.trackTimeMillis).toString()
+        mpTrackCountry.text = trackData.country
+        mpTrackAlbum.text = trackData.collectionName.ifEmpty {
             mpTrackAlbum.visibility = View.GONE
             mpTrackAlbumText.visibility = View.GONE
             ""
         }
-        else track.collectionName
 
-        mpTrackGenre.text = track.primaryGenreName
+
+        mpTrackGenre.text = trackData.primaryGenreName
         mpCurrentTrackDuration.text = "00:00"
-        mpReleaseDate.text = track.releaseDate?.substring(0, 4)
+        mpReleaseDate.text = trackData.releaseDate.substring(0, 4)
     }
 
     private fun setDuration(duration: String) {
         mpCurrentTrackDuration.text = duration
     }
 
-    fun setStartImage() {
-        mpButton.setImageResource(R.drawable.ic_mp_play)
-        mpLiked.setImageResource(R.drawable.ic_mp_liked)
-    }
-
-    fun setPausedImage() {
-        mpButton.setImageResource(R.drawable.ic_pause)
-        mpLiked.setImageResource(R.drawable.ic_liked_play)
-    }
-
-    fun goBack() {
-        finish()
-    }
 
 }
 
