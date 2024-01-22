@@ -4,7 +4,7 @@ import com.practicum.playlistmakerapp.mediaplayer.domain.models.PlayerState
 
 interface MediaPlayerInteractor {
     fun pausePlayer()
-    fun start()
+    fun start(trackUrl: String)
     fun release()
     fun prepare(trackUrl: String)
     fun getPlayerState(): PlayerState

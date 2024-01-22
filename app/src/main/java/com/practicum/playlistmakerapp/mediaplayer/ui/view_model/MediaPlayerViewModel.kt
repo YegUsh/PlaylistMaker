@@ -1,14 +1,10 @@
-package com.practicum.playlistmakerapp.mediaplayer.presentation
+package com.practicum.playlistmakerapp.mediaplayer.ui.view_model
 
 import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.practicum.playlistmakerapp.creator.Creator
 import com.practicum.playlistmakerapp.mediaplayer.domain.interactors.MediaPlayerInteractor
 import com.practicum.playlistmakerapp.mediaplayer.domain.models.PlayerState
 import com.practicum.playlistmakerapp.main.PlayStatus
@@ -35,24 +31,24 @@ class MediaPlayerViewModel(
         handler.removeCallbacksAndMessages(null)
     }
 
-    fun onPlayBtnClicked() {
+    fun onPlayBtnClicked(trackUrl: String) {
 
         when (mediaPlayerInteractor.getPlayerState()) {
             PlayerState.STATE_PLAYING -> {
                 onViewPaused()
             }
             PlayerState.STATE_PREPARED, PlayerState.STATE_PAUSED -> {
-                startPlayer()
+                startPlayer(trackUrl)
             }
             PlayerState.STATE_DEFAULT -> {
-                startPlayer()
+                startPlayer(trackUrl)
             }
         }
     }
 
 
-    private fun startPlayer() {
-        mediaPlayerInteractor.start()
+    private fun startPlayer(trackUrl: String) {
+        mediaPlayerInteractor.start(trackUrl)
         playStatusLiveData.postValue(PlayStatus.OnStart)
 
 
@@ -78,13 +74,6 @@ class MediaPlayerViewModel(
 
      companion object {
          private val MP_DELAY = 1000L
-         fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-             initializer {
-                 MediaPlayerViewModel(
-                     mediaPlayerInteractor = Creator.provideMediaPlayerInteractor()
-                 )
-             }
-         }
      }
 
 }

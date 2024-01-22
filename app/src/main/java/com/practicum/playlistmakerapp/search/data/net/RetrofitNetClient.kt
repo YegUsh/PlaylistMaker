@@ -10,17 +10,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.converter.gson.GsonConverterFactory
 
-class RetrofitNetClient : NetworkClient {
-    companion object {
-        const val baseUrl = "https://itunes.apple.com"
-    }
-
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(baseUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    val songService = retrofit.create(TrackApi::class.java)
+class RetrofitNetClient(val songService: TrackApi) : NetworkClient {
 
     override fun search(query: String, onSuccess: (list: List<TrackData>)-> Unit, onError: (error: SearchUIType)-> Unit) {
         songService.search(query)

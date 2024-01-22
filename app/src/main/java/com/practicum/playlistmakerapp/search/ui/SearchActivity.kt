@@ -20,16 +20,11 @@ import com.practicum.playlistmakerapp.search.domain.model.SearchUIType
 import com.practicum.playlistmakerapp.search.ui.model.UiState
 import com.practicum.playlistmakerapp.search.ui.view_model.SearchViewModel
 import com.practicum.playlistmakerapp.util.router.SearchRouter
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
 
-
-    private val viewModel by lazy {
-        ViewModelProvider(
-            this,
-            SearchViewModel.getViewModelFactory()
-        )[SearchViewModel::class.java]
-    }
+    private val viewModel by viewModel<SearchViewModel>()
 
     private var tempEditTextString = ""
     private val handler = Handler(Looper.getMainLooper())
@@ -103,6 +98,9 @@ class SearchActivity : AppCompatActivity() {
         }
 
         initAdapters()
+        clearHistoryBtn.setOnClickListener {
+            viewModel.onClickClearHistoryBtn()
+        }
 
     }
 

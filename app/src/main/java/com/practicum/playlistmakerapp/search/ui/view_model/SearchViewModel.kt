@@ -5,10 +5,6 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.practicum.playlistmakerapp.creator.Creator
 import com.practicum.playlistmakerapp.mediaplayer.domain.models.TrackData
 import com.practicum.playlistmakerapp.search.domain.api.SearchInteractor
 import com.practicum.playlistmakerapp.search.ui.model.UiState
@@ -69,24 +65,18 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
         handler.postDelayed({ search(query) }, SEARCH_DEBOUNCE_DELAY)
     }
 
-    companion object {
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
-        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                SearchViewModel(searchInteractor = Creator.provideSearchInteractor())
-            }
-        }
-    }
-
     fun search(query: String) {
         _uiStateLiveData.value = UiState.Loading
-        //  progressbar.visibility = View.VISIBLE
         searchInteractor.loadTracks(query,
             onSuccess = {
                 _uiStateLiveData.value = UiState.SearchContent(it)
             }, onError = {
                 _uiStateLiveData.value = UiState.Error(error = it)
             })
+    }
+
+    companion object {
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 
 

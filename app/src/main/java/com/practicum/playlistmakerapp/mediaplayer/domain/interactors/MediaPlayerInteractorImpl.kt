@@ -13,8 +13,8 @@ class MediaPlayerInteractorImpl(val mediaPlayerRepository: MediaPlayerRepository
 
     }
 
-    override fun start() {
-        mediaPlayerRepository.startPlayer()
+    override fun start(trackUrl: String) {
+        mediaPlayerRepository.startPlayer(trackUrl)
 
     }
 
@@ -27,7 +27,7 @@ class MediaPlayerInteractorImpl(val mediaPlayerRepository: MediaPlayerRepository
     }
 
     override fun getPlayerState(): PlayerState {
-        return mediaPlayerRepository.playerState
+        return mediaPlayerRepository.getPlayState()
     }
 
     override fun getCurrentPosition(): String {

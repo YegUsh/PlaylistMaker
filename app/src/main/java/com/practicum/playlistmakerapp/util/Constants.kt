@@ -1,4 +1,3 @@
 package com.practicum.playlistmakerapp.util
 
-class Constants {
-}
+const val THEME_KEY = "theme_key"

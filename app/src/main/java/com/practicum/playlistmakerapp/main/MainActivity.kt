@@ -11,11 +11,11 @@ import com.practicum.playlistmakerapp.main.view_model.MainViewModel
 import com.practicum.playlistmakerapp.music.MediaActivity
 import com.practicum.playlistmakerapp.search.ui.SearchActivity
 import com.practicum.playlistmakerapp.settings.ui.SettingsActivity
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
 
-    val viewModel by lazy {
-        ViewModelProvider(this, MainViewModel.getViewModelFactory())[MainViewModel::class.java] }
+    val viewModel by viewModel<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

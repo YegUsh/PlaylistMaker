@@ -6,10 +6,10 @@ import com.practicum.playlistmakerapp.mediaplayer.domain.models.TrackData
 import com.practicum.playlistmakerapp.search.data.net.NetworkClient
 import com.practicum.playlistmakerapp.search.domain.api.SearchRepository
 import com.practicum.playlistmakerapp.search.domain.model.SearchUIType
-import com.practicum.playlistmakerapp.search.ui.SearchActivity
 
 class SearchRepositoryImpl(private val sharedPreferences: SharedPreferences,
-                           private val networkClient: NetworkClient) : SearchRepository {
+                           private val networkClient: NetworkClient,
+                           val gson: Gson) : SearchRepository {
 
 
     override fun clear() {
@@ -17,7 +17,7 @@ class SearchRepositoryImpl(private val sharedPreferences: SharedPreferences,
     }
 
     override fun saveSearchHistory(historyTrack: ArrayList<TrackData>) {
-        val json = Gson().toJson(historyTrack)
+        val json = gson.toJson(historyTrack)
         sharedPreferences.edit().putString(HISTORY_KEY, json).apply()
     }
 
@@ -28,7 +28,6 @@ class SearchRepositoryImpl(private val sharedPreferences: SharedPreferences,
     ) {
         networkClient.search(query,onSuccess,onError)
     }
-
     override fun getSearchHistory(): List<TrackData> {
         val json = sharedPreferences.getString(HISTORY_KEY, null) ?: return emptyList()
         return Gson().fromJson(json, Array<TrackData>::class.java).toList()
