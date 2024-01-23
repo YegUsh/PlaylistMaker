@@ -13,6 +13,7 @@
     <dimen name="search_drawable_padding">7dp</dimen>
     <dimen name="main_button_margin_top">40dp</dimen>
     <dimen name="settings_margin_start_frame">16dp</dimen>
+    <dimen name="media_margin_start_frame">16dp</dimen>
     <dimen name="settings_paddings_frame">21dp</dimen>
     <dimen name="edittext_layout_height">36dp</dimen>
     <dimen name="track_layout_width">45dp</dimen>
@@ -24,4 +25,5 @@
     <dimen name="mp_text_border">16dp</dimen>
     <dimen name="main_btn_radius">16dp</dimen>
     <dimen name="progressbar_size">44dp</dimen>
+    <dimen name="tab_layout_txt_size">14sp</dimen>
 </resources>
