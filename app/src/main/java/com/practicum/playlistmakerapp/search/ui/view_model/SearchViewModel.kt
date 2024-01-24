@@ -52,7 +52,7 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
     }
 
     fun searchTextHasChanged(text: String) {
-        _textWatcherLiveData.value = !text.isEmpty()
+        _textWatcherLiveData.value = text.isNotEmpty()
         if (text.isEmpty()) {
             _uiStateLiveData.value = UiState.HistoryContent(recentHistoryTracks)
         } else {
@@ -76,7 +76,7 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
     }
 
     companion object {
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val SEARCH_DEBOUNCE_DELAY = 500L
     }
 
 
